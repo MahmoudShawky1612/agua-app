@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aguaapplication/Features/History/Data/Model/drink_model.dart';
 import 'package:aguaapplication/Features/History/Data/Service/api_handler.dart';
-import 'package:intl/intl.dart';
-
 import '../Manager/Cubit/history_cubit.dart';
 import '../Manager/Cubit/history_states.dart';
 
@@ -141,19 +139,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
         children: [
           _buildHistoryHeader(),
           _buildSummaryCard(drinks),
-          Expanded(
-            child: sortedDays.isEmpty
-                ? _buildEmptyState()
-                : ListView.builder(
-              itemCount: sortedDays.length,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              itemBuilder: (context, index) {
-                String day = sortedDays[index];
-                List<DrinksModel> dayDrinks = drinksByDay[day]!;
-                return _buildDayCard(day, dayDrinks);
-              },
-            ),
-          ),
         ],
       ),
     );
@@ -330,9 +315,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               ],
             ),
             const SizedBox(height: 16),
-            _buildHydrationChart(dayDrinks),
             const SizedBox(height: 16),
-            _buildLegend(),
           ],
         ),
       ),
@@ -345,139 +328,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
     return Colors.red;
   }
 
-  Widget _buildHydrationChart(List<DrinksModel> dayDrinks) {
-    return Container(
-      height: 60,
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: List.generate(drinkTimes.length, (index) {
-          // Find the drink for this time slot, if any
-          final expectedTime = drinkTimes[index];
-          final drink = dayDrinks.firstWhere(
-                (d) => d.time == expectedTime,
-            orElse: () => DrinksModel(
-              id: -1,
-              userId: -1,
-              day: '',
-              time: expectedTime,
-              isOnTime: false,
-              litre: 0,
-            ),
-          );
 
-          // Determine the status and color
-          Color color = Colors.red;  // Default: Not drunk (red)
-          if (drink.id != -1) {
-            color = drink.isOnTime ? Colors.green : Colors.amber;  // On time (green) or late (yellow)
-          }
 
-          return Expanded(
-            child: Container(
-              margin: EdgeInsets.only(
-                left: index == 0 ? 0 : 2,
-                right: index == drinkTimes.length - 1 ? 0 : 2,
-              ),
-              decoration: BoxDecoration(
-                color: color,
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Center(
-                child: Text(
-                  "${expectedTime > 12 ? expectedTime - 12 : expectedTime}${expectedTime >= 12 ? 'PM' : 'AM'}",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
-                ),
-              ),
-            ),
-          );
-        }),
-      ),
-    );
-  }
 
-  Widget _buildLegend() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        _buildLegendItem("On Time", Colors.green),
-        const SizedBox(width: 16),
-        _buildLegendItem("Late", Colors.amber),
-        const SizedBox(width: 16),
-        _buildLegendItem("Missed", Colors.red),
-      ],
-    );
-  }
 
-  Widget _buildLegendItem(String label, Color color) {
-    return Row(
-      children: [
-        Container(
-          width: 12,
-          height: 12,
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(3),
-          ),
-        ),
-        const SizedBox(width: 4),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey[600],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.water_drop_outlined, size: 70, color: Colors.blue[300]),
-          const SizedBox(height: 16),
-          Text(
-            "No Hydration Data Yet",
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey[800],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            "Start drinking water to track your hydration!",
-            style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 16,
-            ),
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton.icon(
-            onPressed: () {
-              BlocProvider.of<DrinkCubit>(context).fetchDrinks(widget.userId);
-            },
-            icon: const Icon(Icons.refresh),
-            label: const Text("Refresh"),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue[700],
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }

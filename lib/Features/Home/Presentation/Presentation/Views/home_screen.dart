@@ -97,7 +97,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-
     );
   }
 
@@ -253,9 +252,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildDrinkCard(BuildContext context, int index) {
     final now = DateTime.now();
     final int drinkHour = _drinkTimes[index];
-    bool isTimeToDrink = now.hour == drinkHour && !_drinksTaken[index];
+    bool isTimeToDrink = now.hour == drinkHour;
     bool isPassed = now.hour > drinkHour;
     bool isDrinkTaken = _drinksTaken[index];
+    bool isUpcoming = now.hour < drinkHour;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -316,36 +316,37 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            if (isTimeToDrink)
-              ElevatedButton(
-                onPressed: () => _recordDrink(context, index),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[700],
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
+            if (!isDrinkTaken)
+              if (isUpcoming)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
                     borderRadius: BorderRadius.circular(10),
                   ),
-                ),
-                child: const Text("Drink Now"),
-              )
-            else if (!isPassed && !isDrinkTaken)
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Text(
-                  _formatTimeLeft(_timeLeft[index]),
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey[700],
+                  child: Text(
+                    _formatTimeLeft(_timeLeft[index]),
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey[700],
+                    ),
                   ),
-                ),
-              )
+                )
+              else
+                ElevatedButton(
+                  onPressed: () => _recordDrink(context, index),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue[700],
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text(isTimeToDrink ? "Drink Now" : "Catch Up"),
+                )
             else if (isDrinkTaken)
-                Icon(Icons.check_circle, color: Colors.blue[700]),
+              Icon(Icons.check_circle, color: Colors.blue[700]),
           ],
         ),
       ),
@@ -376,50 +377,6 @@ class _HomeScreenState extends State<HomeScreen> {
           borderRadius: BorderRadius.circular(10),
         ),
         margin: const EdgeInsets.all(10),
-      ),
-    );
-  }
-
-  Widget _buildHistoryScreen() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.insert_chart, size: 70, color: Colors.blue[300]),
-          const SizedBox(height: 20),
-          Text(
-            "Water Intake History",
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey[800],
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            "Track your daily water consumption",
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[600],
-            ),
-          ),
-          const SizedBox(height: 30),
-          ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue[700],
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            child: const Text(
-              "View Statistics",
-              style: TextStyle(fontSize: 16),
-            ),
-          ),
-        ],
       ),
     );
   }
