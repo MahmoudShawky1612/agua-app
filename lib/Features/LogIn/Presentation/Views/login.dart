@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../Home/Presentation/Presentation/Views/home_screen.dart';
 import '../Manager/Cubit/login_cubit.dart';
 import '../Manager/Cubit/login_states.dart';
 
@@ -125,6 +126,10 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                           context,
                           "Welcome, ${state.user.username}!",
                           isError: false,
+                        );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) =>  HomeScreen(username: state.user.username, userId: state.user.id,)),
                         );
                       } else if (state is ErrorLogInState) {
                         _showCustomSnackBar(
