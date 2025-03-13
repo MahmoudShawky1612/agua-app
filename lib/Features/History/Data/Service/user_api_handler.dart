@@ -1,12 +1,13 @@
 import 'dart:convert';
+
+import 'package:aguaapplication/Features/LogIn/Data/Model/user_model.dart';
 import 'package:http/http.dart' as http;
-import '../../../History/Data/Model/drink_model.dart';
 
-class HistoryService {
-  final String baseUrl = "https://81c0-154-238-130-209.ngrok-free.app/api/v1/drink";
+class UserService {
+  final String baseUrl = "https://81c0-154-238-130-209.ngrok-free.app/api/v1/user";
 
-  Future<List<DrinksModel>> getDrinks(int userId) async {
-    final url = Uri.parse('$baseUrl/get-drinks/$userId');
+  Future<UserModel> getUser(int userId) async {
+    final url = Uri.parse('$baseUrl/get-user/$userId');
 
     try {
       final response = await http.get(
@@ -16,12 +17,8 @@ class HistoryService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-
-        List<DrinksModel> drinks = (data['drank'] as List)
-            .map((item) => DrinksModel.fromJson(item))
-            .toList();
-
-        return drinks;
+        // Access the 'user' field in the response
+        return UserModel.fromJson(data['user']);
       } else {
         final errorData = jsonDecode(response.body);
         throw Exception('Failed: ${errorData['msg']}');
@@ -30,5 +27,4 @@ class HistoryService {
       print('Error: $e');
       throw Exception('Something went wrong: $e');
     }
-  }
-}
+  }}

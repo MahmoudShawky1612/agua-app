@@ -1,9 +1,12 @@
+import 'package:aguaapplication/Features/LogIn/Data/Model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aguaapplication/Features/History/Data/Model/drink_model.dart';
 import 'package:aguaapplication/Features/History/Data/Service/api_handler.dart';
 import '../Manager/Cubit/history_cubit.dart';
 import '../Manager/Cubit/history_states.dart';
+import '../Manager/UserCubit/user_cubit.dart';
+import '../Manager/UserCubit/user_states.dart';
 
 class HistoryScreen extends StatefulWidget {
   final int userId;
@@ -17,7 +20,21 @@ class HistoryScreen extends StatefulWidget {
 class _HistoryScreenState extends State<HistoryScreen> {
   // Expected drink times
   final List<int> drinkTimes = [3, 9, 12, 15, 18, 21];
+  late UserCubit userCubit;
 
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      userCubit = BlocProvider.of<UserCubit>(context, listen: false);
+
+      // Start the fetch process
+      userCubit.fetchUser(widget.userId);
+
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -185,7 +202,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget _buildSummaryCard(List<DrinksModel> drinks) {
     int totalDrinks = drinks.length;
     int onTimeDrinks = drinks.where((drink) => drink.isOnTime).length;
-    double onTimePercentage = totalDrinks > 0 ? (onTimeDrinks / totalDrinks) * 100 : 0;
 
     return Container(
       margin: const EdgeInsets.fromLTRB(16, 8, 16, 16),
@@ -222,20 +238,55 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 const SizedBox(height: 16),
                 Row(
                   children: [
-                    _buildSummaryStat(
-                      "$totalDrinks",
-                      "Total Drinks",
-                      Icons.water_drop,
+                    BlocBuilder<UserCubit, UserStates>(
+                      builder: (context, state) {
+                        if (state is SuccessUserState) {
+                          return _buildSummaryStat(
+                            "${state.user.totalDrinks}%",
+                            "Total Drinks",
+                            Icons.trending_up,
+                          );
+                        }
+                        return _buildSummaryStat(
+                          "0%", // Default value
+                          "Total Drinks",
+                          Icons.trending_up,
+                        );
+                      },
                     ),
-                    _buildSummaryStat(
-                      "$onTimeDrinks",
-                      "On Time",
-                      Icons.check_circle,
+
+                    BlocBuilder<UserCubit, UserStates>(
+                      builder: (context, state) {
+                        if (state is SuccessUserState) {
+                          return _buildSummaryStat(
+                            "${state.user.onTimeDrinks}%",
+                            "On Time",
+                            Icons.trending_up,
+                          );
+                        }
+                        return _buildSummaryStat(
+                          "0%", // Default value
+                          "On Time",
+                          Icons.trending_up,
+                        );
+                      },
                     ),
-                    _buildSummaryStat(
-                      "${onTimePercentage.toStringAsFixed(0)}%",
-                      "Accuracy",
-                      Icons.trending_up,
+
+                    BlocBuilder<UserCubit, UserStates>(
+                      builder: (context, state) {
+                        if (state is SuccessUserState) {
+                          return _buildSummaryStat(
+                            "${state.user.accuracy}%",
+                            "Accuracy",
+                            Icons.trending_up,
+                          );
+                        }
+                        return _buildSummaryStat(
+                          "0%", // Default value
+                          "Accuracy",
+                          Icons.trending_up,
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -246,7 +297,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
       ),
     );
   }
-
   Widget _buildSummaryStat(String value, String label, IconData icon) {
     return Expanded(
       child: Column(

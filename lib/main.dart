@@ -1,5 +1,7 @@
 import 'package:aguaapplication/Features/History/Data/Service/api_handler.dart';
+import 'package:aguaapplication/Features/History/Data/Service/user_api_handler.dart';
 import 'package:aguaapplication/Features/History/Presentation/Presentation/Manager/Cubit/history_cubit.dart';
+import 'package:aguaapplication/Features/History/Presentation/Presentation/Manager/UserCubit/user_cubit.dart';
 import 'package:aguaapplication/Features/Home/Presentation/Presentation/Manager/Cubit/home_cubit.dart';
 import 'package:aguaapplication/Features/LogIn/Data/Service/api_handler.dart';
 import 'package:aguaapplication/Features/LogIn/Presentation/Manager/Cubit/login_cubit.dart';
@@ -32,24 +34,24 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<LogInCubit>(create: (context) => LogInCubit(LogInService())),
         BlocProvider<AddDrinkCubit>(create: (context) => AddDrinkCubit(AddDrinkService())),
-        BlocProvider<DrinkCubit>(create: (context) => DrinkCubit(HistoryService())),
+        BlocProvider<UserCubit>(create: (context) => UserCubit(UserService())),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: FutureBuilder<List?>(
-      future: getSavedUser(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(body: Center(child: CircularProgressIndicator()));
-        } else if
-            (snapshot.hasData && snapshot.data!.isNotEmpty) {
-          return HomeScreen(username: snapshot.data?[0] , userId: snapshot.data?[1]);
-        } else {
-          return const LoginScreen();
-        }
-      },
-    ),
-
+    //     home: FutureBuilder<List?>(
+    //   future: getSavedUser(),
+    //   builder: (context, snapshot) {
+    //     if (snapshot.connectionState == ConnectionState.waiting) {
+    //       return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    //     } else if
+    //         (snapshot.hasData && snapshot.data!.isNotEmpty) {
+    //       return HomeScreen(username: snapshot.data?[0] , userId: snapshot.data?[1]);
+    //     } else {
+    //       return const LoginScreen();
+    //     }
+    //   },
+    // ),
+    home: LoginScreen(),
     ),
     );
   }
