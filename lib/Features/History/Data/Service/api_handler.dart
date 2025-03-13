@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import '../../../History/Data/Model/drink_model.dart';
 
 class HistoryService {
-  final String baseUrl = 'https://b173-217-55-27-125.ngrok-free.app/api/v1/drink'; // Change to your actual base URL
+  final String baseUrl = "https://e855-154-238-130-209.ngrok-free.app/api/v1/drink";
 
   Future<List<DrinksModel>> getDrinks(int userId) async {
     final url = Uri.parse('$baseUrl/get-drinks/$userId');

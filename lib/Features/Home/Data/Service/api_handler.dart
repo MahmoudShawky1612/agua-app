@@ -4,7 +4,7 @@ import '../Model/drink_model.dart';
 import 'package:http/http.dart' as http;
 
 class AddDrinkService{
-  final String baseUrl = 'https://b173-217-55-27-125.ngrok-free.app/api/v1/drink';
+  final String baseUrl = ' https://e855-154-238-130-209.ngrok-free.app/api/v1/drink';
 
   Future<DrankModel> addDrink (int userId)async {
     final url = Uri.parse('$baseUrl/add-drink/${userId}');

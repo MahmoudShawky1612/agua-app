@@ -1,6 +1,8 @@
+import 'package:aguaapplication/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../Home/Presentation/Presentation/Views/home_screen.dart';
 import '../Manager/Cubit/login_cubit.dart';
 import '../Manager/Cubit/login_states.dart';
@@ -33,7 +35,6 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
 
   @override
   void dispose() {
-    usernameController.dispose();
     _animationController.dispose();
     super.dispose();
   }
@@ -126,11 +127,15 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                           context,
                           "Welcome, ${state.user.username}!",
                           isError: false,
-                        );Navigator.pushAndRemoveUntil(
+                        );
+
+                        saveUser(state.user.username, state.user.id);
+                        Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(builder: (context) => HomeScreen(username: state.user.username, userId: state.user.id)),
                               (route) => false,
                         );
+
                       } else if (state is ErrorLogInState) {
                         _showCustomSnackBar(
                           context,
@@ -265,4 +270,10 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       ),
     );
   }
+}
+
+Future<void> saveUser (String username, int userId)async{
+  final sharedPref = await SharedPreferences.getInstance();
+  await sharedPref.setString('username', username);
+  await sharedPref.setInt('userId', userId);
 }
