@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../Home/Presentation/Presentation/Views/home_screen.dart';
 import '../Manager/Cubit/login_cubit.dart';
 import '../Manager/Cubit/login_states.dart';
+final TextEditingController usernameController = TextEditingController();
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -13,7 +14,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
-  final TextEditingController _usernameController = TextEditingController();
   String _selectedGender = 'Male';
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -33,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
 
   @override
   void dispose() {
-    _usernameController.dispose();
+    usernameController.dispose();
     _animationController.dispose();
     super.dispose();
   }
@@ -86,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                       ],
                     ),
                     child: TextField(
-                      controller: _usernameController,
+                      controller: usernameController,
                       style: GoogleFonts.poppins(),
                       decoration: InputDecoration(
                         hintText: "Username",
@@ -126,10 +126,10 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                           context,
                           "Welcome, ${state.user.username}!",
                           isError: false,
-                        );
-                        Navigator.push(
+                        );Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (context) =>  HomeScreen(username: state.user.username, userId: state.user.id,)),
+                          MaterialPageRoute(builder: (context) => HomeScreen(username: state.user.username, userId: state.user.id)),
+                              (route) => false,
                         );
                       } else if (state is ErrorLogInState) {
                         _showCustomSnackBar(
@@ -227,7 +227,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   }
 
   void _handleLogin(BuildContext context) {
-    final username = _usernameController.text.trim();
+    final username = usernameController.text.trim();
     if (username.isNotEmpty) {
       context.read<LogInCubit>().login(username, _selectedGender);
     } else {

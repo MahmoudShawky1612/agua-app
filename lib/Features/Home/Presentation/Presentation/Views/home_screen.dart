@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:aguaapplication/Features/History/Presentation/Presentation/Views/history_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aguaapplication/Features/Home/Data/Service/api_handler.dart';
@@ -17,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  final List<int> _drinkTimes = [3, 9, 12, 15, 18, 21]; // Drinking schedule
+  final List<int> _drinkTimes = [4, 9, 12, 15, 18, 21]; // Drinking schedule
   final List<bool> _drinksTaken = List.filled(6, false); // Track water intake
   final List<int> _timeLeft = List.filled(6, 0); // Track countdown timers
   Timer? _timer;
@@ -70,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         backgroundColor: Colors.grey[100],
         appBar: _buildAppBar(),
-        body: _selectedIndex == 0 ? _buildHomeBody() : _buildHistoryScreen(),
+        body: _selectedIndex == 0 ? _buildHomeBody() : HistoryScreen(userId: widget.userId),
         bottomNavigationBar: _buildBottomNavBar(),
       ),
     );
@@ -96,16 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.notifications_outlined, color: Colors.black87),
-          onPressed: () {},
-        ),
-        IconButton(
-          icon: const Icon(Icons.settings_outlined, color: Colors.black87),
-          onPressed: () {},
-        ),
-      ],
+
     );
   }
 
