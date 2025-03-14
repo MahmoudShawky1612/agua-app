@@ -137,7 +137,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Widget _buildHistoryContent(List<DrinksModel> drinks) {
-    // Group drinks by day
     Map<String, List<DrinksModel>> drinksByDay = {};
     for (var drink in drinks) {
       if (!drinksByDay.containsKey(drink.day)) {
@@ -147,8 +146,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
     }
 
     // Sort days in descending order (most recent first)
-    List<String> sortedDays = drinksByDay.keys.toList()
-      ..sort((a, b) => DateTime.parse(b).compareTo(DateTime.parse(a)));
 
     return SafeArea(
       child: Column(
@@ -200,8 +197,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Widget _buildSummaryCard(List<DrinksModel> drinks) {
-    int totalDrinks = drinks.length;
-    int onTimeDrinks = drinks.where((drink) => drink.isOnTime).length;
 
     return Container(
       margin: const EdgeInsets.fromLTRB(16, 8, 16, 16),
@@ -242,13 +237,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       builder: (context, state) {
                         if (state is SuccessUserState) {
                           return _buildSummaryStat(
-                            "${state.user.totalDrinks}%",
+                            "${state.user.totalDrinks}",
                             "Total Drinks",
                             Icons.trending_up,
                           );
                         }
                         return _buildSummaryStat(
-                          "0%", // Default value
+                          "0", // Default value
                           "Total Drinks",
                           Icons.trending_up,
                         );
@@ -323,63 +318,4 @@ class _HistoryScreenState extends State<HistoryScreen> {
       ),
     );
   }
-
-  Widget _buildDayCard(String day, List<DrinksModel> dayDrinks) {
-    String formattedDate = day; // Directly use the weekday string
-
-    // Calculate completion percentage
-    int totalExpected = drinkTimes.length;
-    int completed = dayDrinks.length;
-    double completionPercentage = (completed / totalExpected) * 100;
-
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  formattedDate, // Now uses the weekday directly
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey[800],
-                  ),
-                ),
-                Text(
-                  "${completionPercentage.toStringAsFixed(0)}% Complete",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: _getCompletionColor(completionPercentage),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            const SizedBox(height: 16),
-          ],
-        ),
-      ),
-    );
   }
-
-  Color _getCompletionColor(double percentage) {
-    if (percentage >= 80) return Colors.green;
-    if (percentage >= 50) return Colors.orange;
-    return Colors.red;
-  }
-
-
-
-
-
-}

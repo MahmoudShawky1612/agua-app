@@ -13,20 +13,21 @@ import 'Features/Home/Data/Service/api_handler.dart';
 import 'Features/Home/Presentation/Presentation/Views/home_screen.dart';
 import 'Features/LogIn/Presentation/Views/login.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   Future<List?> getSavedUser() async {
     final sharedPref = await SharedPreferences.getInstance();
     return [
-      sharedPref.getString("username"),
-      sharedPref.getInt("userId")
+      sharedPref.getString("username") ,  // Default to an empty string
+      sharedPref.getInt("userId")         // Default to 0
     ];
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -38,20 +39,19 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-    //     home: FutureBuilder<List?>(
-    //   future: getSavedUser(),
-    //   builder: (context, snapshot) {
-    //     if (snapshot.connectionState == ConnectionState.waiting) {
-    //       return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    //     } else if
-    //         (snapshot.hasData && snapshot.data!.isNotEmpty) {
-    //       return HomeScreen(username: snapshot.data?[0] , userId: snapshot.data?[1]);
-    //     } else {
-    //       return const LoginScreen();
-    //     }
-    //   },
-    // ),
-    home: LoginScreen(),
+        home: FutureBuilder<List?>(
+          future: getSavedUser(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Scaffold(body: Center(child: CircularProgressIndicator()));
+            } else if (snapshot.hasData && snapshot.data![0] != null && snapshot.data![1] != null) {
+              return HomeScreen(username: snapshot.data![0] as String, userId: snapshot.data![1] as int);
+            } else {
+              return const LoginScreen();
+            }
+          },
+        ),
+
     ),
     );
   }

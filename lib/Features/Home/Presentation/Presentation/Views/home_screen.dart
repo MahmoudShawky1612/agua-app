@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:aguaapplication/Features/History/Presentation/Presentation/Views/history_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Add this import
 import 'package:aguaapplication/Features/Home/Data/Service/api_handler.dart';
 import 'package:aguaapplication/Features/Home/Presentation/Presentation/Manager/Cubit/home_cubit.dart';
 import 'package:aguaapplication/Features/Home/Presentation/Presentation/Manager/Cubit/home_states.dart';
@@ -18,15 +19,48 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  final List<int> _drinkTimes = [4, 9, 12, 15, 18, 21]; // Drinking schedule
-  final List<bool> _drinksTaken = List.filled(6, false); // Track water intake
+  final List<int> _drinkTimes = [3, 9, 12, 15, 18, 21];
+  List<bool> _drinksTaken = List.filled(6, false); // Initialize with default values
   final List<int> _timeLeft = List.filled(6, 0); // Track countdown timers
   Timer? _timer;
+  int _currentDay = DateTime.now().day;
+  bool _isLoading = true; // Add a loading state
 
   @override
   void initState() {
     super.initState();
+    _currentDay = DateTime.now().day;
+    _loadDrinksTaken().then((_) {
+      setState(() {
+        _isLoading = false; // Mark loading as complete
+      });
+    });
     _startCountdownTimers();
+  }
+
+  // Load the state of drinks taken from SharedPreferences
+  Future<void> _loadDrinksTaken() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      for (int i = 0; i < _drinkTimes.length; i++) {
+        _drinksTaken[i] = prefs.getBool('drinkTaken_$i') ?? false;
+      }
+    });
+  }
+
+
+  // Save the state of drinks taken to SharedPreferences
+  Future<void> _saveDrinksTaken(int index) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('drinkTaken_$index', _drinksTaken[index]);
+  }
+
+  // Reset all drinks taken in SharedPreferences when the day changes
+  Future<void> _resetDrinksTakenInPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    for (int i = 0; i < _drinkTimes.length; i++) {
+      await prefs.setBool('drinkTaken_$i', false);
+    }
   }
 
   @override
@@ -38,6 +72,16 @@ class _HomeScreenState extends State<HomeScreen> {
   void _startCountdownTimers() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       final now = DateTime.now();
+
+      // Check if day has changed
+      if (now.day != _currentDay) {
+        setState(() {
+          _currentDay = now.day;
+          _drinksTaken = List.filled(_drinkTimes.length, false); // Reset all drinks
+          _resetDrinksTakenInPrefs(); // Reset SharedPreferences state
+        });
+      }
+
       setState(() {
         for (int i = 0; i < _drinkTimes.length; i++) {
           int drinkHour = _drinkTimes[i];
@@ -62,6 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _drinksTaken[index] = true;
     });
+    _saveDrinksTaken(index); // Save the state to SharedPreferences
   }
 
   @override
@@ -266,12 +311,8 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          color: isDrinkTaken
-              ? Colors.blue.withOpacity(0.1)
-              : Colors.white,
-          border: isDrinkTaken
-              ? Border.all(color: Colors.blue, width: 1.5)
-              : null,
+          color: isDrinkTaken ? Colors.blue.withOpacity(0.1) : Colors.white,
+          border: isDrinkTaken ? Border.all(color: Colors.blue, width: 1.5) : null,
         ),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Row(
@@ -303,13 +344,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    isDrinkTaken
-                        ? "Completed"
-                        : (isPassed ? "Missed" : "Upcoming"),
+                    isDrinkTaken ? "Completed" : (isPassed ? "Missed" : "Upcoming"),
                     style: TextStyle(
-                      color: isDrinkTaken
-                          ? Colors.blue[700]
-                          : (isPassed ? Colors.red : Colors.grey[600]),
+                      color: isDrinkTaken ? Colors.blue[700] : (isPassed ? Colors.red : Colors.grey[600]),
                       fontSize: 14,
                     ),
                   ),
