@@ -4,7 +4,7 @@ import 'package:aguaapplication/Features/LogIn/Data/Model/user_model.dart';
 import 'package:http/http.dart' as http;
 
 class UserService {
-  final String baseUrl = "https://679c-154-238-130-209.ngrok-free.app/api/v1/user";
+  final String baseUrl = "https://d85f-217-55-63-49.ngrok-free.app/api/v1/user";
 
   Future<UserModel> getUser(int userId) async {
     final url = Uri.parse('$baseUrl/get-user/$userId');

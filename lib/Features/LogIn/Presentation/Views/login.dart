@@ -129,10 +129,10 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                           isError: false,
                         );
 
-                        saveUser(state.user.username, state.user.id);
+                        saveUser(state.user.username, state.user.id, state.user.gender);
                         Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (context) => HomeScreen(username: state.user.username, userId: state.user.id)),
+                          MaterialPageRoute(builder: (context) => HomeScreen(username: state.user.username, userId: state.user.id, gender: state.user.gender,)),
                               (route) => false,
                         );
 
@@ -272,8 +272,10 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   }
 }
 
-Future<void> saveUser (String username, int userId)async{
+Future<void> saveUser (String username, int userId, String gender)async{
   final sharedPref = await SharedPreferences.getInstance();
   await sharedPref.setString('username', username);
   await sharedPref.setInt('userId', userId);
+  await sharedPref.setInt('userId', userId);
+  await sharedPref.setString('gender', gender);
 }

@@ -10,8 +10,9 @@ import 'package:aguaapplication/Features/Home/Presentation/Presentation/Manager/
 class HomeScreen extends StatefulWidget {
   final String username;
   final int userId;
+  final String gender;
 
-  const HomeScreen({Key? key, required this.username, required this.userId}) : super(key: key);
+  const HomeScreen({Key? key, required this.username, required this.userId, required this.gender}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -115,14 +116,14 @@ class _HomeScreenState extends State<HomeScreen> {
       create: (context) => AddDrinkCubit(AddDrinkService()),
       child: Scaffold(
         backgroundColor: Colors.grey[100],
-        appBar: _buildAppBar(),
+        appBar: _buildAppBar(widget.gender),
         body: _selectedIndex == 0 ? _buildHomeBody() : HistoryScreen(userId: widget.userId),
         bottomNavigationBar: _buildBottomNavBar(),
       ),
     );
   }
 
-  PreferredSizeWidget _buildAppBar() {
+  PreferredSizeWidget _buildAppBar(String gender) {
     return AppBar(
       elevation: 0,
       backgroundColor: Colors.white,
@@ -130,8 +131,16 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           CircleAvatar(
             backgroundColor: Colors.blue[700],
-            child: const Icon(Icons.person, color: Colors.white),
+            radius: 20,
+            child: ClipOval(
+              child: Image.asset(
+              gender== 'Male'?  "assets/images/avatar.jpg" : "assets/images/8c6ddb5fe6600fcc4b183cb2ee228eb7.jpg",
+                fit: BoxFit.contain,
+
+              ),
+            ),
           ),
+
           const SizedBox(width: 10),
           Text(
             widget.username,

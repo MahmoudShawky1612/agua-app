@@ -23,8 +23,9 @@ class MyApp extends StatelessWidget {
   Future<List?> getSavedUser() async {
     final sharedPref = await SharedPreferences.getInstance();
     return [
-      sharedPref.getString("username") ,  // Default to an empty string
-      sharedPref.getInt("userId")         // Default to 0
+      sharedPref.getString("username") ,
+      sharedPref.getInt("userId") ,
+      sharedPref.getString("gender")
     ];
   }
 
@@ -45,7 +46,7 @@ class MyApp extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Scaffold(body: Center(child: CircularProgressIndicator()));
             } else if (snapshot.hasData && snapshot.data![0] != null && snapshot.data![1] != null) {
-              return HomeScreen(username: snapshot.data![0] as String, userId: snapshot.data![1] as int);
+              return HomeScreen(username: snapshot.data![0] as String, userId: snapshot.data![1] as int, gender: snapshot.data![2] as String,);
             } else {
               return const LoginScreen();
             }
