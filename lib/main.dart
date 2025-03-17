@@ -15,6 +15,7 @@ import 'Features/LogIn/Presentation/Views/login.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   runApp(const MyApp());
 }
 
@@ -28,7 +29,6 @@ class MyApp extends StatelessWidget {
       sharedPref.getString("gender")
     ];
   }
-
 
   @override
   Widget build(BuildContext context) {

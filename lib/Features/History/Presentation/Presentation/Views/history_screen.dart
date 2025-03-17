@@ -19,7 +19,7 @@ class HistoryScreen extends StatefulWidget {
 
 class _HistoryScreenState extends State<HistoryScreen> {
   // Expected drink times
-  final List<int> drinkTimes = [3, 9, 12, 15, 18, 21];
+  final List<int> drinkTimes = [3, 9, 12, 15, 18, 23];
   late UserCubit userCubit;
 
 
@@ -254,13 +254,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       builder: (context, state) {
                         if (state is SuccessUserState) {
                           return _buildSummaryStat(
-                            "${state.user.onTimeDrinks}%",
+                            "${state.user.onTimeDrinks}",
                             "On Time",
                             Icons.trending_up,
                           );
                         }
                         return _buildSummaryStat(
-                          "0%", // Default value
+                          "0", // Default value
                           "On Time",
                           Icons.trending_up,
                         );

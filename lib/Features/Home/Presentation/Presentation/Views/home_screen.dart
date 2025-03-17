@@ -20,7 +20,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  final List<int> _drinkTimes = [3, 9, 12, 15, 18, 21];
+  final List<int> _drinkTimes = [3, 9, 12, 15, 18, 23];
   List<bool> _drinksTaken = List.filled(6, false); // Initialize with default values
   final List<int> _timeLeft = List.filled(6, 0); // Track countdown timers
   Timer? _timer;
