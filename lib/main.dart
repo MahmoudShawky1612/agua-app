@@ -12,10 +12,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'Features/Home/Data/Service/api_handler.dart';
 import 'Features/Home/Presentation/Presentation/Views/home_screen.dart';
 import 'Features/LogIn/Presentation/Views/login.dart';
+import 'Notification/notification_service.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
+    WidgetsFlutterBinding.ensureInitialized();
+    await NotificationService.init();
+    await NotificationService.scheduleNotifications();
   runApp(const MyApp());
 }
 
