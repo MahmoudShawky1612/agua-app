@@ -109,7 +109,7 @@ class NotificationService {
 
     for (int hour in notificationTimes) {
      await scheduleDailyNotification(
-          hour, 0, 'Reminder', 'It\'s time to drink water!');
+          hour, 0, 'Let\'s get you hydrated', 'It\'s time to drink water!');
     }
   }
 }
