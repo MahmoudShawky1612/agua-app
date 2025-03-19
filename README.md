@@ -5,7 +5,6 @@ Agua is a simple yet powerful water tracking app built with Flutter. It features
 ## 🚀 Features
 
 ✅ Track your daily water intake with ease  
-✅ Set and customize your hydration goals  
 ✅ View detailed history and insightful statistics  
 ✅ Modern and responsive user interface  
 ✅ Secure authentication for user data protection  
