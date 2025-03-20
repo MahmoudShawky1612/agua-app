@@ -12,6 +12,8 @@ Agua is a simple yet powerful water tracking app built with Flutter. It features
 ✅ PostgreSQL database powered by Prisma ORM for reliable storage  
 
 
+try it out [https://drive.google.com/file/d/1Sguam2F-4f2WVFcdCAYsQT5GHEKo0VKt/view?usp=sharing]
+
 ![Screenshot_2025-03-19-03-56-25-56_a2b17a962453587567e06beac5f706f2](https://github.com/user-attachments/assets/e4f539f9-6107-4a6f-a0b3-0dc0bef0bd18)
 
 ![Screenshot_2025-03-19-03-56-17-59_ab1359306de43320f9557c797b1c4be5](https://github.com/user-attachments/assets/22f5d548-beb1-448a-aef8-8810238a8122)
