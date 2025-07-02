@@ -27,8 +27,7 @@ class HistoryService {
         throw Exception('Failed: ${errorData['msg']}');
       }
     } catch (e) {
-      print('Error: $e');
-      throw Exception('Something went wrong: $e');
+       throw Exception('Something went wrong: $e');
     }
   }
 }

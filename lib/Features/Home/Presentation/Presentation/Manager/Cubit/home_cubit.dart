@@ -12,8 +12,7 @@ class AddDrinkCubit extends Cubit<AddDrinkStates> {
       final drink = await addDrinkService.addDrink(userId, drinkHour, index, day);
       emit(SuccessAddDrinkState(drink));
     } catch (e) {
-      print(e);
-      emit(ErrorAddDrinkState("Something went wrong!, $e"));
+       emit(ErrorAddDrinkState("Something went wrong!, $e"));
     }
   }
 }

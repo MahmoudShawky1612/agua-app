@@ -14,8 +14,7 @@ class DrinkCubit extends Cubit<DrinkStates> {
       final drinks = await historyService.getDrinks(userId);
       emit(SuccessDrinkState(drinks));
     } catch (e) {
-      print(e);
-      emit(ErrorDrinkState("Something went wrong! $e"));
+       emit(ErrorDrinkState("Something went wrong! $e"));
     }
   }
 }

@@ -63,8 +63,6 @@ class NotificationService {
       int hour, int minute, String title, String body) async {
     final tz.TZDateTime scheduledTime = _nextInstanceOfTime(hour, minute);
 
-    print("Scheduling notification at: $scheduledTime");
-
     const AndroidNotificationDetails androidDetails =
         AndroidNotificationDetails('channel_id', 'channel_name',
             importance: Importance.high, priority: Priority.high, icon: 'icon');
@@ -84,10 +82,7 @@ class NotificationService {
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         matchDateTimeComponents: DateTimeComponents.time,
       );
-      print("Notification scheduled successfully.");
-    } catch (e) {
-      print("Failed to schedule notification: $e");
-    }
+    } catch (e) {}
   }
 
   static tz.TZDateTime _nextInstanceOfTime(int hour, int minute) {

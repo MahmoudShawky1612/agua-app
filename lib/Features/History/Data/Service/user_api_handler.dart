@@ -17,14 +17,13 @@ class UserService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        // Access the 'user' field in the response
         return UserModel.fromJson(data['user']);
       } else {
         final errorData = jsonDecode(response.body);
         throw Exception('Failed: ${errorData['msg']}');
       }
     } catch (e) {
-      print('Error: $e');
       throw Exception('Something went wrong: $e');
     }
-  }}
+  }
+}

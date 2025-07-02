@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import '../Model/drink_model.dart';
 
 class AddDrinkService {
-  final String baseUrl = "https://caa9-217-55-26-242.ngrok-free.app/api/v1/drink";
+  final String baseUrl = "https://agua-fawn.vercel.app/api/v1/drink";
 
   Future<DrankModel> addDrink(int userId, int drinkHour, int index, String day) async {
     final url = Uri.parse('$baseUrl/add-drink/$userId');
@@ -26,8 +26,7 @@ class AddDrinkService {
         throw Exception('Failed: ${errorData['msg']}');
       }
     } catch (e) {
-      print('Error: $e');
-      throw Exception('Something went wrong: $e');
+       throw Exception('Something went wrong: $e');
     }
   }
 }

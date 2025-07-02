@@ -16,8 +16,7 @@ class UserCubit extends Cubit<UserStates> {
       emit(SuccessUserState(user));
 
     } catch (e) {
-      print(e);
-      emit(ErrorUserState("Something went wrong! $e"));
+       emit(ErrorUserState("Something went wrong! $e"));
     }
   }
 }

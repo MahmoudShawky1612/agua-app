@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../Data/Model/user_model.dart';
+
 import '../../../Data/Service/api_handler.dart';
 import 'login_states.dart';
 
@@ -19,7 +19,6 @@ class LogInCubit extends Cubit<LogInStates> {
         emit(ErrorLogInState("Login failed: Invalid response"));
       }
     } catch (e) {
-      print(e);
       emit(ErrorLogInState("Error logging in: $e"));
     }
   }
