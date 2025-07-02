@@ -7,10 +7,11 @@ import 'package:aguaapplication/Features/LogIn/Data/Service/api_handler.dart';
 import 'package:aguaapplication/Features/LogIn/Presentation/Manager/Cubit/login_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Features/Home/Data/Service/api_handler.dart';
-import 'Features/Home/Presentation/Presentation/Views/home_screen.dart';
+import 'Features/Home/Presentation/Presentation/Views/widgets/home_screen.dart';
 import 'Features/LogIn/Presentation/Views/login.dart';
 import 'Notification/notification_service.dart';
 
@@ -40,22 +41,29 @@ class MyApp extends StatelessWidget {
         BlocProvider<AddDrinkCubit>(create: (context) => AddDrinkCubit(AddDrinkService())),
         BlocProvider<UserCubit>(create: (context) => UserCubit(UserService())),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: FutureBuilder<List?>(
-          future: getSavedUser(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Scaffold(body: Center(child: CircularProgressIndicator()));
-            } else if (snapshot.hasData && snapshot.data![0] != null && snapshot.data![1] != null) {
-              return HomeScreen(username: snapshot.data![0] as String, userId: snapshot.data![1] as int, gender: snapshot.data![2] as String,);
-            } else {
-              return const LoginScreen();
-            }
-          },
+      child: ScreenUtilInit(
+        designSize: const Size(360, 690),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (context, child) => MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: FutureBuilder<List?>(
+            future: getSavedUser(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Scaffold(body: Center(child: CircularProgressIndicator()));
+              } else if (snapshot.hasData && snapshot.data![0] != null && snapshot.data![1] != null) {
+                return HomeScreen(
+                  username: snapshot.data![0] as String,
+                  userId: snapshot.data![1] as int,
+                  gender: snapshot.data![2] as String,
+                );
+              } else {
+                return const LoginScreen();
+              }
+            },
+          ),
         ),
-
-    ),
-    );
+      ),    );
   }
 }

@@ -1,23 +1,22 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 class NotificationService {
   static final FlutterLocalNotificationsPlugin _notificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
 
   static Future<void> init() async {
     tz.initializeTimeZones();
 
     const AndroidInitializationSettings androidSettings =
-    AndroidInitializationSettings('icon');
+        AndroidInitializationSettings('icon');
 
     const DarwinInitializationSettings iosSettings =
-    DarwinInitializationSettings();
+        DarwinInitializationSettings();
 
     const InitializationSettings settings =
-    InitializationSettings(android: androidSettings, iOS: iosSettings);
+        InitializationSettings(android: androidSettings, iOS: iosSettings);
 
     await _notificationsPlugin.initialize(settings);
 
@@ -27,16 +26,16 @@ class NotificationService {
 
   static Future<void> requestPermissions() async {
     final androidImplementation =
-    _notificationsPlugin.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>();
+        _notificationsPlugin.resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>();
 
     if (androidImplementation != null) {
       await androidImplementation.requestNotificationsPermission();
     }
 
     final iosImplementation =
-    _notificationsPlugin.resolvePlatformSpecificImplementation<
-        IOSFlutterLocalNotificationsPlugin>();
+        _notificationsPlugin.resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin>();
 
     if (iosImplementation != null) {
       await iosImplementation.requestPermissions(
@@ -49,14 +48,13 @@ class NotificationService {
 
   static Future<void> showNotification(String title, String body) async {
     const AndroidNotificationDetails androidDetails =
-    AndroidNotificationDetails('channel_id', 'channel_name',
-        importance: Importance.high, priority: Priority.high, icon: 'icon');
+        AndroidNotificationDetails('channel_id', 'channel_name',
+            importance: Importance.high, priority: Priority.high, icon: 'icon');
 
-    const DarwinNotificationDetails iosDetails =
-    DarwinNotificationDetails();
+    const DarwinNotificationDetails iosDetails = DarwinNotificationDetails();
 
     const NotificationDetails details =
-    NotificationDetails(android: androidDetails, iOS: iosDetails);
+        NotificationDetails(android: androidDetails, iOS: iosDetails);
 
     await _notificationsPlugin.show(0, title, body, details);
   }
@@ -68,13 +66,13 @@ class NotificationService {
     print("Scheduling notification at: $scheduledTime");
 
     const AndroidNotificationDetails androidDetails =
-    AndroidNotificationDetails('channel_id', 'channel_name',
-        importance: Importance.high, priority: Priority.high, icon: 'icon');
+        AndroidNotificationDetails('channel_id', 'channel_name',
+            importance: Importance.high, priority: Priority.high, icon: 'icon');
 
     const DarwinNotificationDetails iosDetails = DarwinNotificationDetails();
 
     const NotificationDetails details =
-    NotificationDetails(android: androidDetails, iOS: iosDetails);
+        NotificationDetails(android: androidDetails, iOS: iosDetails);
 
     try {
       await _notificationsPlugin.zonedSchedule(
@@ -95,7 +93,7 @@ class NotificationService {
   static tz.TZDateTime _nextInstanceOfTime(int hour, int minute) {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
     tz.TZDateTime scheduledTime =
-    tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
+        tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
 
     if (scheduledTime.isBefore(now)) {
       scheduledTime = scheduledTime.add(const Duration(days: 1));
@@ -105,10 +103,10 @@ class NotificationService {
   }
 
   static Future<void> scheduleNotifications() async {
-    List<int> notificationTimes = [1, 7, 10, 12, 16, 21];
+    List<int> notificationTimes = [3, 9, 12, 15, 18, 23];
 
     for (int hour in notificationTimes) {
-     await scheduleDailyNotification(
+      await scheduleDailyNotification(
           hour, 0, 'Let\'s get you hydrated', 'It\'s time to drink water!');
     }
   }
